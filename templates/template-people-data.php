@@ -1,4 +1,7 @@
 <?php 
+if (!defined('my_plugin_dir')) {
+    define('my_plugin_dir', plugin_dir_url(__File__));
+}
 //quiz_details, quiz_user_details, learning_sections
 global $wpdb;
 $table_name = $wpdb->prefix . 'quiz_details';
@@ -53,11 +56,11 @@ foreach ($q1 as $key => $value) {
     
 } */
 ?>
-	
+    
 <div class="learning-main-section">
     <div class="learning-top-header People-top-header">
-		<h1>Staff</h1>
-	</div>
+        <h1>Staff</h1>
+    </div>
     <div class="sub-section">
         <div class="sub-sec-left">
             <h3>
@@ -70,8 +73,8 @@ foreach ($q1 as $key => $value) {
             </h3>
         </div>
     </div>
-	<div class="people-list">
-		<ul>
+    <div class="people-list">
+        <ul>
             <?php foreach ($sp as $key => $value) {                
                 $display_name = get_display_name($key);
                 $name =  $display_name;   
@@ -90,7 +93,7 @@ foreach ($q1 as $key => $value) {
                              <a class="scoreinfo" data-toggle="modal" data-target="#myModal-all-<?php echo $user_id; ?>">
                                 <h3 class="name-info"><?php echo $name;?></h3>
                             </a>
-    						
+                            
                             <?php
                                 $allsection_array = array();
                                  foreach($value as $sid => $sval) { 
@@ -153,7 +156,7 @@ foreach ($q1 as $key => $value) {
                     </div>
                     
                     <div  class="people-per-wrapper">
-    						    <select class="sub-sec-right" name="user_cat" id="user_cat" data-user-id="<?php echo $user_id; ?>">
+                                <select class="sub-sec-right" name="user_cat" id="user_cat" data-user-id="<?php echo $user_id; ?>">
                                     <option value="All">All</option>
                                     <option value="Installation" <?php echo ($user_cat === 'Installation') ? 'selected' : ''; ?>>
                                         Installation
@@ -162,7 +165,7 @@ foreach ($q1 as $key => $value) {
                                         Maintenance
                                     </option>
                                 </select>
-    						</div>
+                            </div>
                     <div class="people-per-wrapper">
                         <?php
                         $gold = $silver = $bronze = $fail = 0;
@@ -205,7 +208,7 @@ foreach ($q1 as $key => $value) {
                         <?php if($gold > 0) : ?>
                             <div class="pro-percentage"> 
                                 <a class="scoreinfo" data-toggle="modal" data-target="#myModal-gold-<?php echo $user_id; ?>">
-                                    <img src="<?php echo get_stylesheet_directory_uri().'/images/trophygold.png'; ?>" width="25px;"/>
+                                    <img src="<?php echo my_plugin_dir.'/images/trophygold.png'; ?>" width="25px;"/>
                                     <p><?php echo $gold; ?></p>
                                 </a>
                                 <?php echo popupfunction('gold',$g_arr,$user_id,$name); ?>
@@ -214,25 +217,25 @@ foreach ($q1 as $key => $value) {
                         <?php if($silver > 0) : ?>
                             <div class="pro-percentage">
                                 <a class="scoreinfo" data-toggle="modal" data-target="#myModal-silver-<?php echo $user_id; ?>">
-                                    <img src="<?php echo get_stylesheet_directory_uri().'/images/trophysilver.png'; ?>" width="25px;"/>
+                                    <img src="<?php echo my_plugin_dir.'/images/trophysilver.png'; ?>" width="25px;"/>
                                     <p><?php echo $silver; ?></p>
                                 </a>
                                 <?php echo popupfunction('silver',$s_arr,$user_id,$name); ?>
                             </div>         
                         <?php endif; ?> 
                         <?php if($bronze > 0) : ?>
-                            <div class="pro-percentage"> 	
+                            <div class="pro-percentage">    
                                 <a class="scoreinfo" data-toggle="modal" data-target="#myModal-bronze-<?php echo $user_id; ?>">
-                                    <img src="<?php echo get_stylesheet_directory_uri().'/images/trophybronze.png'; ?>" width="25px;"/>
+                                    <img src="<?php echo my_plugin_dir.'/images/trophybronze.png'; ?>" width="25px;"/>
                                     <p><?php echo $bronze; ?></p>
                                 </a>
                                 <?php echo popupfunction('bronze',$b_arr,$user_id,$name); ?>
                             </div>         
                         <?php endif; ?>
                         <?php if($fail > 0) : ?>
-                            <div class="pro-percentage"> 	
+                            <div class="pro-percentage">    
                                 <a class="scoreinfo" data-toggle="modal" data-target="#myModal-fail-<?php echo $user_id; ?>">
-                                    <img src="<?php echo get_stylesheet_directory_uri().'/images/trophyx.png'; ?>" width="25px;"/>
+                                    <img src="<?php echo my_plugin_dir.'/images/trophyx.png'; ?>" width="25px;"/>
                                     <p><?php echo $fail; ?></p>
                                 </a>
                                 <?php echo popupfunction('fail',$f_arr,$user_id,$name); ?>
@@ -244,9 +247,9 @@ foreach ($q1 as $key => $value) {
                 } //if name
                 
         } //main foreach
-         ?>        					
-		</ul>
-	</div>
+         ?>                         
+        </ul>
+    </div>
 </div>
 
 
@@ -269,27 +272,27 @@ foreach ($q1 as $key => $value) {
             
             jQuery.ajax({
         
-                	url: '<?php echo site_url(); ?>/wp-admin/admin-ajax.php',
-                	type: 'post',
-                	
-                	data: {
-                  		action: "update_user_cat",
-                    	cat_value: cat_value,
-                    	user_id: user_id,
-                	},
+                    url: '<?php echo site_url(); ?>/wp-admin/admin-ajax.php',
+                    type: 'post',
+                    
+                    data: {
+                        action: "update_user_cat",
+                        cat_value: cat_value,
+                        user_id: user_id,
+                    },
         
-                	success:function(data) {
-                		if(data == 'assigned'){
-                		    
-                		    
-                		    
-        	    		}else{
-        	    		    console.log("not updatedd");
-        	    		}
+                    success:function(data) {
+                        if(data == 'assigned'){
+                            
+                            
+                            
+                        }else{
+                            console.log("not updatedd");
+                        }
         
-                	}
+                    }
         
-            	});
+                });
 
         });
     });

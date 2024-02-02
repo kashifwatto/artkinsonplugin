@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: My Custom Plugin
+Plugin Name: Atkonsonlearning
 Description: Description of what the plugin does.
 Version: 1.0
 Author: Your Name
@@ -51,27 +51,52 @@ function enqueue_custom_scripts() {
 
     wp_enqueue_script("timer-js", plugins_url("/js/timer.js", __FILE__), array('jquery'), time(), true);
     wp_enqueue_script("tour-js", plugins_url("/js/tour.js", __FILE__), array('jquery'), time(), true);
+    wp_enqueue_script("jqueryui-js", plugins_url("/js/jquery-ui.min.js", __FILE__), array('jquery'), time(), true);
     wp_enqueue_script("child-js", plugins_url("/js/script.js", __FILE__), array('jquery'), time(), true);
-    wp_localize_script("child2-js", "myAjax", array("site_url" => site_url(), "ajax_url" => admin_url('admin-ajax.php')));
+       // Enqueue your plugin script
+       wp_enqueue_script('your-plugin-script', plugin_dir_url(__FILE__) . 'js/script.js', array('jquery'), '1.0', true);
+
+       // Localize script with dynamic AJAX URL
+       wp_localize_script('your-plugin-script', 'myAjax', array(
+           'ajax_url' => admin_url('admin-ajax.php'),
+           'site_url' => site_url(),
+       ));
 }
 
 register_activation_hook(__FILE__, 'my_plugin_activation_create_new_page');
 
 // Activation callback function
-function my_plugin_activation_create_new_page() {
+function my_plugin_activation_create_new_page(){
     
+  $page_title = "Dashboard";
 
-    if (!is_page( 'Dashboard' )) {
+    // Check if a page with the title exists
+    $existing_page = get_page_by_title($page_title, OBJECT, 'page');
+
+    if (!$existing_page) {
         // Create a new page
         $new_page_id = wp_insert_post(array(
-            'post_title'     => 'Dashboard',
-            'post_content'   => '',
-            'post_status'    => 'publish',
-            'post_type'      => 'page',
+            'post_title'   => $page_title,
+            'post_content' => '',
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
         ));
 
-
+        // Check if the page was created successfully
+        if ($new_page_id) {
+            // Page created successfully
+            // error_log('New page created with ID: ' . $new_page_id);
+        } else {
+            // Error creating the page
+            // error_log('Error creating new page.');
+        }
+    } else {
+        // Page already exists
+        // error_log('Page with title "' . $page_title . '" already exists.');
     }
+
+   
+
 }
 
 add_filter('page_template', 'wp_page_template');
@@ -87,24 +112,9 @@ function wp_page_template( $page_template )
 function mycustom_plugin_create_database_table(){
 
     global $wpdb;
-    $table_name = $wpdb->prefix . "mycustompluginliketable"; 
-
-
 $charset_collate = $wpdb->get_charset_collate();
-
-$sql = "CREATE TABLE IF NOT EXISTS $table_name (
-  id mediumint(9) NOT NULL AUTO_INCREMENT,
-  time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-  user_id mediumint(9) NOT NULL,
-  post_id mediumint(9) NOT NULL,
-  like_count mediumint(9) NOT NULL,
-  dislike_count mediumint(9) NOT NULL,
-  
-  PRIMARY KEY  (id)
-) $charset_collate;";
-
 require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-dbDelta( $sql );
+
 
 
 // Table names
@@ -116,7 +126,23 @@ $coin_table_name = $wpdb->prefix . 'coin_wallet';
 $atl_products_table_name = $wpdb->prefix . 'atl_products';
 $atl_orders_table_name = $wpdb->prefix . 'atl_orders';
 $table_name = $wpdb->prefix . 'learning_sections';
-$myoptionstable = $wpdb->prefix . 'my_options';
+
+// Add column in Wp-user;
+// Add your custom column name
+$custom_column_name = 'self_assigned_date';
+
+// Get the prefixed table name
+$custom_table_name = $wpdb->prefix . 'users';
+
+// Check if the column exists before adding it
+if ($wpdb->get_var("SHOW COLUMNS FROM {$custom_table_name} LIKE '{$custom_column_name}'") != $custom_column_name) {
+    // Define the SQL query to add the new column
+    $sql = "ALTER TABLE {$custom_table_name} ADD COLUMN {$custom_column_name} DATE DEFAULT NULL";
+
+    // Execute the SQL query
+    $wpdb->query($sql);
+}
+
 
 
 $sql = "CREATE TABLE IF NOT EXISTS $table_name (
@@ -133,28 +159,14 @@ $sql = "CREATE TABLE IF NOT EXISTS $table_name (
 
 $wpdb->query($sql);
 
-$sql = "CREATE TABLE IF NOT EXISTS $myoptionstable (
-    id mediumint(9) NOT NULL AUTO_INCREMENT,
-    self_assigned_date date  NULL,
-    if_leagues varchar(255) NOT NULL DEFAULT 'y' ,
-    league1_score_min int NOT NULL DEFAULT 0,
-    league2_score_min int NOT NULL DEFAULT 35,
-    league3_score_min int NOT NULL DEFAULT 80,
-    league1_title varchar(255) NOT NULL DEFAULT 'Lower League',
-    league2_title varchar(255) NOT NULL DEFAULT 'Mid League',
-    league3_title varchar(255) NOT NULL DEFAULT 'Big League',
-    if_self_assign varchar(255) NOT NULL DEFAULT 'y',
-    PRIMARY KEY (id)
-) $charset_collate;";
-
-$wpdb->query($sql);
 
 
 
 // Table structure for quiz_section_score
+
 $sql = "CREATE TABLE IF NOT EXISTS $quiz_score_tbl (
     id mediumint(9) NOT NULL AUTO_INCREMENT,
-    quizid mediumint(9) NOT NULL,
+    quizid mediumint(9) NOT NULL, 
     userid mediumint(9) NOT NULL,
     sectionid mediumint(9) NOT NULL,
     average_score varchar(255),
@@ -616,7 +628,7 @@ function get_quiz_progress_bar($quiz_score){
                 <span>
                     <?php echo $quiz_score; ?>%
                 </span>
-                <img src="<?php echo get_stylesheet_directory_uri().'/images/'.$cls; ?>" width="25px;" />
+                <img src="<?php echo my_plugin_dir.'/images/'.$cls; ?>" width="25px;" />
             </div>
         </div>
         <div class="pro-percentage-bar">
@@ -763,7 +775,7 @@ function get_wrong_answer_list($user_id,$section_id){
                     <span>
                         <?php echo $quiz_score; ?>%
                     </span>
-                    <img src="<?php echo get_stylesheet_directory_uri().'/images/'.$cls; ?>" width="25px;" />
+                    <img src="<?php echo my_plugin_dir.'/images/'.$cls; ?>" width="25px;" />
                 </div>
             </div>
             <div class="pro-percentage-bar">
@@ -1226,13 +1238,14 @@ function quiz_wizard_popup($quizid,$userid){
     ?>
 <div class="popup-quiz-overlay">
     <div class="popup-content">
+        
         <div class="modal-header">
             <span class="close">×</span>
             <h2 data-title="<?php echo $title; ?>">
                 <?php echo $title; ?> Quiz
             </h2>
-            <input type="hidden" value="<?php echo $quizid; ?>" name="quiz_id" />
-            <input type="hidden" value="<?php echo $userid; ?>" name="user_id" />
+            <input type="hidden" value="<?php echo $quizid; ?>" name="quiz_id" id="quiz_id" />
+            <input type="hidden" value="<?php echo $userid; ?>" name="user_id" id="user_id" />
         </div>
         <div class="modal-body">
             <?php
@@ -1298,11 +1311,11 @@ function quiz_wizard_popup($quizid,$userid){
                 </div>
             </div>
             <div class="loading-gif" style="display:none">
-                <img src="<?php echo get_stylesheet_directory_uri(); ?>/templates/loading.gif" alt="" class="loader"
+                <img src="<?php echo my_plugin_dir ?>/templates/loading.gif" alt="" class="loader"
                     width="30px" height="30px">
             </div>
         </div>
-
+        
     </div>
 </div>
 
@@ -1317,6 +1330,7 @@ function quiz_modules_save_action_frontend(){
     $userid = $_POST['userid'];
     $quizdata = $_POST['quizdata'];
     $correctCount = 0;
+    
 
     $quiz_table_name = $wpdb->prefix . 'quiz_user_details';
     $if_exists = $wpdb->get_row("SELECT * FROM $quiz_table_name where quizid = {$quizid} AND userid = {$userid}",ARRAY_A);
@@ -1625,7 +1639,7 @@ function learning_modules_save_action() {
                         <div class="bar-top" style="width: 100px ;text-align: right;-webkit-box-pack: end;-ms-flex-pack: end;justify-content: flex-end;">                       
                             <div class="pro-percentage" style="padding-bottom: 0;">
                                 <span>'.$quiz_score.'%</span>
-                                <img src="'.get_stylesheet_directory_uri().'/images/'.$cls.'" width="25px;"/>
+                                <img src="'.my_plugin_dir.'/images/'.$cls.'" width="25px;"/>
                             </div>
                         </div>
                     </div>
@@ -1869,7 +1883,7 @@ function redirect_if_user_not_logged_in() {
 
     if ( !is_user_logged_in() && !is_page(501)) {
 
-        wp_redirect( site_url().'/login');
+        wp_redirect( site_url().'/wp-admin');
         exit;
     }
     if(is_user_logged_in() && is_page(501)){
@@ -2428,7 +2442,7 @@ function atkinson_settings() {
                     
                         if( $image = wp_get_attachment_image_url( $image_id, 'medium' ) ) : ?>
                     <a href="#" class="atls-upload">
-                        <img src="<?php echo esc_url( $image ) ?>" />
+                        <img src="<?php echo esc_url($image )?>"  />
                     </a>
                     <a href="#" class="atls-remove">Remove image</a>
                     <input type="hidden" name="atls_img" value="<?php echo absint( $image_id ) ?>">
@@ -2446,7 +2460,9 @@ function atkinson_settings() {
                 </th>
                 <td>
                     <input type="color" name="global_color"
-                        value="<?php echo esc_attr( get_option('global_color') ); ?>">
+                        value="<?php echo esc_attr( get_option('global_color') ); ?>"
+                        style="cursor:pointer;"
+                        >
 
                 </td>
             </tr>
@@ -3385,6 +3401,7 @@ add_action( 'wp_ajax_nopriv_learning_modules_revert_action_backend', 'learning_m
 
 function learning_modules_assign_users() {
 
+
     global $wpdb;
 
     $section_id = $_POST['section_id'];
@@ -3401,7 +3418,10 @@ function learning_modules_assign_users() {
 
     
     if($addUserFlag){
-        $merged_users = array_merge($old_assigned_users, $assigned_users);
+        // comment by kashif at 30/01/24
+//         $merged_users = array_merge($old_assigned_users, $assigned_users);
+              $merged_users = array_merge((array)$old_assigned_users, (array)$assigned_users);
+
         $assigned_users=$merged_users;
     }
 
@@ -3999,7 +4019,7 @@ function fetch_quiz_by_u_s($sectionid, $userid){
                 $cls = 'trophyx.png';
                 $bgcolor = 'style="background:#000;"';
             endif;
-            $average = '<img src="'.get_stylesheet_directory_uri().'/images/'.$cls.'" width="40px" height="40px" '.$bgcolor.' />';
+            $average = '<img src="'.my_plugin_dir.'/images/'.$cls.'" width="40px" height="40px" '.$bgcolor.' />';
         }else if($quiz_score == 0 || $quiz_score == ''){
             $average = '';
         }
@@ -4035,15 +4055,57 @@ if (!current_user_can('administrator') && !is_admin()) {
 
 
 
-function add_content_after($content) {
+// function add_content_after($content) {
 
-    $after_content = "[learning_modules_action_btn]";
+//     $after_content = "[learning_modules_action_btn]";
 
-    $fullcontent = $content . $after_content;
+//     $fullcontent = $content . $after_content;
 
-    return $fullcontent;
+//     return $fullcontent;
 
+// }
+
+// add_filter('the_content', 'add_content_for_completed_sections');
+// for adding quiz section in subsection complted url
+function add_content_for_completed_subsections_pages($content) {
+    global $wpdb;
+
+    // Replace 'your_custom_table' with the actual name of your custom table
+    $custom_table_name = $wpdb->prefix . 'learning_sections';
+
+    // Get serialized data from the database
+    $serialized_data = $wpdb->get_col("SELECT learning_subsection FROM $custom_table_name");
+
+    // Check if there is any serialized data
+    if (!empty($serialized_data)) {
+        foreach ($serialized_data as $data) {
+            // Deserialize the data
+            $subsection_data = maybe_unserialize($data);
+
+            // Check if 'sub_completed_url' is set and print the URL
+            foreach ($subsection_data as $sub_section) {
+                if (isset($sub_section['sub_completed_url'])) {
+                    $sub_completed_url = $sub_section['sub_completed_url'];
+                    echo "Checking URL: $sub_completed_url against current URL: " . get_permalink() . "\n";
+
+                    // Check if the URL matches the current URL
+                    if ($sub_completed_url === get_permalink()) {
+                        // Apply the shortcode if the condition is met
+                        $after_content = '[learning_modules_action_btn]';
+                        $fullcontent = $content . $after_content;
+                        return $fullcontent;
+                    }
+                }
+            }
+        }
+    }
+
+    return $content;
 }
+
+// Add the filter
+add_filter('the_content', 'add_content_for_completed_subsections_pages');
+
 
 function get_display_name($user_id) {
     if (!$user = get_userdata($user_id))

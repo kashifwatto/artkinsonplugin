@@ -1,4 +1,7 @@
 <?php 
+if (!defined('my_plugin_dir')) {
+    define('my_plugin_dir', plugin_dir_url(__File__));
+}
 global $wpdb;
 
 $value = $args['val'];
@@ -36,7 +39,7 @@ if(!empty($score_sql)) :
         elseif($quiz_score >= get_option('fail_score_min') && $quiz_score <= (get_option('bronze_score_min') - 1)):
             $cls = 'trophyx.png';
         endif;
-        $average = '<img src="'.get_stylesheet_directory_uri().'/images/'.$cls.'" style="width:25px;" />';
+        $average = '<img src="'.my_plugin_dir.'/images/'.$cls.'" style="width:25px;" />';
     }else{
         $average = '';
     }

@@ -5,10 +5,14 @@ Template Name: User Dashboard Template
 */
 
 ?>
-<?php get_header();
+<?php 
+get_header();
+if (!defined('my_plugin_dir')) {
+    define('my_plugin_dir', plugin_dir_url(__File__));
+}
 global $wpdb;
 if ( !is_user_logged_in() ) {
-    wp_redirect( site_url().'/login');
+    wp_redirect( site_url().'/wp-admin');
     exit;
 }
 $user_id = '1';
@@ -469,7 +473,7 @@ if(true){
                         </svg>
                     </span>
                 </a>
-                <a href="<?php echo wp_logout_url(site_url().'/login/');?>">
+                <a href="<?php echo wp_logout_url(site_url().'/wp-admin/');?>">
                     <span class="lg-text">
                         Logout
                     </span>
@@ -481,7 +485,7 @@ if(true){
                         </g>
                     </svg>
                     </span>
-                    <!-- <img src="<?php echo get_stylesheet_directory_uri().'/images/logout.png'; ?>" /> -->
+                    <!-- <img src="<?php echo my_plugin_dir.'/images/logout.png'; ?>" /> -->
                 </a>
             </div>
 
@@ -547,7 +551,7 @@ if(true){
                         elseif($quiz_score >= get_option('fail_score_min') && $quiz_score <= (get_option('bronze_score_min') - 1)):
                             $cls = 'trophyx.png';
                         endif;
-                        $average = '<img src="'.get_stylesheet_directory_uri().'/images/'.$cls.'"/>';
+                        $average = '<img src="'.my_plugin_dir.'/images/'.$cls.'"/>';
                     }else{
                         $average = '';
                     }
@@ -692,7 +696,7 @@ if(true){
                                             <a href="javascript:void(0);" data-pid="<?php echo $plist['id']; ?>" data-price="<?php echo $plist['product_price'];?>" class="add-to-cart <?php echo $disabled; ?>"><?php echo $text; ?></a>
                                         </div>
                                         <div class="shop-loader">
-                                            <img src="<?php echo get_stylesheet_directory_uri().'/templates/loading.gif'; ?>" height="30px" width="30px">
+                                            <img src="<?php echo my_plugin_dir.'/templates/loading.gif'; ?>" height="30px" width="30px">
                                         </div>
                                     </li>
                                     
@@ -973,7 +977,7 @@ if(true){
                         </svg>
                     </span>
                 </a>
-                <a href="<?php echo wp_logout_url(site_url().'/login/');?>">
+                <a href="<?php echo wp_logout_url(site_url().'/wp-admin/');?>">
                     <span class="lg-text">
                         Logout
                     </span>

@@ -543,6 +543,7 @@ if(isset($_GET['action'])){
 <script>
 
 jQuery(document).ready(function($){
+
     jQuery.validator.addMethod("lettersonly", function(value, element) {
         return this.optional(element) || /^[a-zA-Z\s]+$/i.test(value);
     }, "Please enter only characters");

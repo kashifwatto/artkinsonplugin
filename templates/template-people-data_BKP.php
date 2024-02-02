@@ -1,4 +1,7 @@
 <?php 
+if (!defined('my_plugin_dir')) {
+    define('my_plugin_dir', plugin_dir_url(__File__));
+}
 //quiz_details, quiz_user_details, learning_sections
 global $wpdb;
 $table_name = $wpdb->prefix . 'quiz_details';
@@ -13,11 +16,11 @@ foreach ($q1 as $key => $value) {
     
 }
 ?>
-	
+    
 <div class="learning-main-section">
     <div class="learning-top-header People-top-header">
-		<h1>Staff</h1>
-	</div>
+        <h1>Staff</h1>
+    </div>
     <div class="sub-section">
         <div class="sub-sec-left">
             <h3>
@@ -30,8 +33,8 @@ foreach ($q1 as $key => $value) {
             </h3>
         </div>
     </div>
-	<div class="people-list">
-		<ul>
+    <div class="people-list">
+        <ul>
             <?php foreach ($kp as $key => $value) {                
                 $display_name = get_display_name($key);
                 $name =  $display_name;   
@@ -99,8 +102,8 @@ foreach ($q1 as $key => $value) {
                             endif;    
                             ?>
                        
-                        <div class="pro-percentage"> 				
-                            <img src="<?php echo get_stylesheet_directory_uri().'/images/'.$cls; ?>" width="25px;"/>
+                        <div class="pro-percentage">                
+                            <img src="<?php echo my_plugin_dir.'/images/'.$cls; ?>" width="25px;"/>
                             <p><?php echo round($quiz_score); ?>%</p>
                         </div> 
                         <?php } ?>          
@@ -109,9 +112,9 @@ foreach ($q1 as $key => $value) {
             <?php
                 } //if name
         } //main foreach
-         ?>        					
-		</ul>
-	</div>
+         ?>                         
+        </ul>
+    </div>
 </div>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

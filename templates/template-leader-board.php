@@ -1,4 +1,7 @@
 <?php 
+if (!defined('my_plugin_dir')) {
+    define('my_plugin_dir', plugin_dir_url(__File__));
+}
 //quiz_details, quiz_user_details, learning_sections
 global $wpdb;
 $table_name = $wpdb->prefix . 'quiz_details';
@@ -43,8 +46,8 @@ foreach ($q1 as $key => $value) {
 ?>
 <div class="learning-main-section">
     <div class="learning-top-header People-top-header">
-		<h1>LeaderBoard Score</h1>
-	</div>
+        <h1>LeaderBoard Score</h1>
+    </div>
     <table class="table cell-border" id="lbscore" cellspacing="0">
         <thead>
             <tr>
@@ -157,7 +160,7 @@ foreach ($q1 as $key => $value) {
                         <td>
                             <div class="pro-percentage">
                                 <?php if($gold > 0) : ?>
-                                    <img src="<?php echo get_stylesheet_directory_uri().'/images/trophygold.png'; ?>" width="25px;"/>
+                                    <img src="<?php echo my_plugin_dir.'/images/trophygold.png'; ?>" width="25px;"/>
                                     <p><?php echo $gold; ?></p>
                                 <?php endif; ?>
                             </div> 
@@ -165,7 +168,7 @@ foreach ($q1 as $key => $value) {
                         <td>
                             <div class="pro-percentage">
                                 <?php if($silver > 0) : ?>
-                                    <img src="<?php echo get_stylesheet_directory_uri().'/images/trophysilver.png'; ?>" width="25px;"/>
+                                    <img src="<?php echo my_plugin_dir.'/images/trophysilver.png'; ?>" width="25px;"/>
                                     <p><?php echo $silver; ?></p>
                                 <?php endif; ?> 
                             </div>
@@ -173,15 +176,15 @@ foreach ($q1 as $key => $value) {
                         <td>
                             <div class="pro-percentage">
                                 <?php if($bronze > 0) : ?>
-                                    <img src="<?php echo get_stylesheet_directory_uri().'/images/trophybronze.png'; ?>" width="25px;"/>
+                                    <img src="<?php echo my_plugin_dir.'/images/trophybronze.png'; ?>" width="25px;"/>
                                     <p><?php echo $bronze; ?></p>
                                 <?php endif; ?>
-                            </div> 	
+                            </div>  
                         </td>         
                         <td>
                             <div class="pro-percentage">
                                 <?php if($fail > 0) : ?>
-                                    <img src="<?php echo get_stylesheet_directory_uri().'/images/trophyx.png'; ?>" width="25px;"/>
+                                    <img src="<?php echo my_plugin_dir.'/images/trophyx.png'; ?>" width="25px;"/>
                                     <p><?php echo $fail; ?></p>
                                 <?php endif; ?>
                             </div>

@@ -1,7 +1,7 @@
 /* Javascript */
 (function( $ ) {
 
-	'use strict';
+    'use strict';
     
     jQuery('.learning_modules_action_btn_quiz a').click(function(e){
         jQuery(".popup-quiz-overlay, .popup-content").show();
@@ -13,7 +13,7 @@
     });
 
     if($('#quiz_btn_timer').length == 1) {
-        $(window).load(function(){
+        $(window).on('load', function(){
             //console.log($('#quiz_btn_timer').val());
             startTimer();
             $('#quiz_btn_timer').siblings('.learning_modules_action_btn_quiz').children('.start_quiz').addClass('disabled');
@@ -45,6 +45,7 @@
         var answrap = jQuery(this).prev('.ans-wrap');
         var count = 0;
         var anscount = 0;
+        
         answrap.find('.ans-d').each(function(){
             if(jQuery(this).find('input').is(':checked')){
                 count = count + 1;
@@ -68,6 +69,7 @@
 
                 if(success == jQuery('.question-wrapper').length){
                     
+
                     $.ajax({
                         url: myAjax.ajax_url,
                         type: 'post',
@@ -101,6 +103,9 @@
                         }
             
                     });
+                
+                    
+                
                 }
             }
         }else{
@@ -115,51 +120,50 @@
    
 
 
-	jQuery('.learning_modules_action_btn a, .continue-btn').click(function(e){
-
+    jQuery('.learning_modules_action_btn a, .continue-btn').click(function(e){
         jQuery(this).attr('disabled',true).css({'opacity':'0.6', 'pointer-events':'none', 'cursor':'not-allowed'});
         
-		e.preventDefault();
-		var url = window.location.href;
+        e.preventDefault();
+        var url = window.location.href;
 
             url = url.replace(/\/$/, ''); 
 
         $.ajax({
 
-        	url: myAjax.ajax_url,
+            url: myAjax.ajax_url,
 
-        	type: 'post',
+            type: 'post',
 
-        	data: {
+            data: {
 
-           		action: "learning_modules_save_action",
+                action: "learning_modules_save_action",
 
-            	data: url,
+                data: url,
 
-        	},
+            },
             beforeSend: function() {
                 // setting a timeout
                 jQuery('.loading-gif').show();
                 
             },
-        	success:function(data) {
+            success:function(data) {
                 jQuery('.loading-gif').hide();
                 var res = jQuery.parseJSON(data);
-	            if(res.success == "success" && res.pageurl == "dashboard"){
+                if(res.success == "success" && res.pageurl == "dashboard"){
 
                     window.location.href = myAjax.site_url+"/dashboard/";
 
-            	}else if(res.success == "success" && res.pageurl != "dashboard"){
+                }else if(res.success == "success" && res.pageurl != "dashboard"){
 
                     window.location.href = res.pageurl;
 
-            	}
+                }
 
-        	}
+            }
 
-    	});
+        });
 
-	});
+    });
 
 
 
@@ -282,7 +286,7 @@
 
 
     /**Add to cart */
-    jQuery(document).on('click','.add-to-cart',function(e){
+    jQuery(document).off('click', '.add-to-cart').on('click','.add-to-cart',function(e){
 
         e.preventDefault();
         var elem = jQuery(this);
@@ -375,3 +379,6 @@ function showPopup(whichpopup){
 function closePopup(){
     jQuery('.overlay-bg, .overlay-content').hide();
 }
+
+
+

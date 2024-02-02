@@ -18,7 +18,7 @@ body.toplevel_page_learning_sections{
 
     margin-left: -20px;
 
-    padding: 50px 80px;
+    padding: 15px 30px;
 
     margin-bottom: 50px;
     background: #ffffff;
@@ -1028,6 +1028,7 @@ h2#swal2-title {
     font-size: 25px;
     margin: 0 auto;
     color: #00b3e0;
+    margin-top:20px;
 }
 .backto-wrap{
     display: flex;
@@ -1334,18 +1335,18 @@ li.headings {
 /* Trash section page end*/
 
 .bootstrap-tagsinput {
-	margin: 0;
-	width: 100%;
-	padding: 0.5rem 0.75rem 0;
-	font-size: 1rem;
+    margin: 0;
+    width: 100%;
+    padding: 0.5rem 0.75rem 0;
+    font-size: 1rem;
     line-height: 1.25;
-	transition: border-color 0.15s ease-in-out;
-}	
+    transition: border-color 0.15s ease-in-out;
+}   
 .bootstrap-tagsinput.has-focus {
     background-color: #fff;
     border-color: #5cb3fd;
 }
-	
+    
 .bootstrap-tagsinput .label-info {
     display: inline-block;
     background-color: #636c72;
@@ -1353,13 +1354,13 @@ li.headings {
     border-radius: .25rem;
     margin-bottom: 0.4em;
 }
-	
+    
 .bootstrap-tagsinput input {
     margin-bottom: 0.5em;
 }
 
 .bootstrap-tagsinput .tag [data-role="remove"]:after {
-	content: '\00d7';
+    content: '\00d7';
 }
 .range-cls{
     margin: 10px;
@@ -1601,9 +1602,9 @@ td a.edit-product:hover {
 
     .subsection-learning-section .sections-fields{
 
-        grid-template-columns: 2fr 1fr 1fr 0.5fr;
+        grid-template-columns: 1.5fr 1fr 1fr 0.8fr;
 
-        grid-gap: 20px;
+        grid-gap: 15px;
 
     }
 
