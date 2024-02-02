@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Atkonsonlearning
-Description: Description of what the plugin does.
+Description: this is without page validation.
 Version: 1.0
 Author: Your Name
 */
@@ -4086,7 +4086,7 @@ function add_content_for_completed_subsections_pages($content) {
             foreach ($subsection_data as $sub_section) {
                 if (isset($sub_section['sub_completed_url'])) {
                     $sub_completed_url = $sub_section['sub_completed_url'];
-                    echo "Checking URL: $sub_completed_url against current URL: " . get_permalink() . "\n";
+                    // echo "Checking URL: $sub_completed_url against current URL: " . get_permalink() . "\n";
 
                     // Check if the URL matches the current URL
                     if ($sub_completed_url === get_permalink()) {

@@ -53,6 +53,28 @@ if(isset($_GET['action'])){
 
                             </div>
 
+       <!-- <div class="form-field">
+    <select name="sub_section_completed_url[]" >
+        
+
+        <?php
+       
+        $pages = get_pages(array('sort_column' => 'post_title', 'sort_order' => 'ASC'));
+        foreach ($pages as $page) {
+            $page_url = get_permalink($page->ID);
+            
+
+            ?>
+
+            <option value="<?php echo esc_attr($page_url); ?>"><?php echo esc_html($page_url); ?></option>
+            <?php
+        }
+        ?>
+
+        <option value="None">None</option>
+    </select>
+</div> -->
+
                             <div class="form-field">
 
                                 <!-- <a href="#" onclick="deletethis(jQuery(this))">X</a>  -->

@@ -17,7 +17,7 @@ if (isset($_GET['action'])) {
                 <form action="" method="" id="add_product_form" name="add_product_form">
                     <div class="top-section-details">
                         <div class="section_upload_icon">
-                            <label for="prod_icon"><img width="50px" src="/wp-content/uploads/2022/03/icons-camera.png"/></label>
+                            <label for="prod_icon"><img width="50px" src="<?php echo my_plugin_dir?>/icons-camera.png"/></label>
                             <input id="prod_icon" name="prod_icon_attachment" type="hidden" />
                         </div>
                         <div class="form-field">
@@ -54,7 +54,7 @@ if (isset($_GET['action'])) {
         }
         ?>
         <div class="products-top-header">
-            <a href="<?php echo admin_url('admin.php?page=shop-items'); ?>"><img src="/wp-content/themes/twentynineteen-child/images/back.png"></a>
+            <a href="<?php echo admin_url('admin.php?page=shop-items'); ?>"><img src="<?php echo my_plugin_dir?>/images/back.png"></a>
             <h1>Edit Product</h1>
         </div>
         <div class="atl-product-wrapper">
