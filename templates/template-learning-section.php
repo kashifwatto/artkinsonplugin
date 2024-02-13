@@ -19,7 +19,7 @@ if(isset($_GET['action'])){
                             <input id="section_icon" name="section_icon_attachment" type="text" />
                         </div>
                         <div class="form-field">
-                            <input type="text" name="section_title" placeholder="Title"/>
+                            <input type="text" name="section_title" required placeholder="Title"/>
                         </div>
                         
                         <div class="form-field">
@@ -37,43 +37,51 @@ if(isset($_GET['action'])){
 
                             <div class="form-field">
 
-                                <input type="text" name="sub_section_title[]" placeholder="Subsection Title"/>
+                                <input type="text" required name="sub_section_title[]" placeholder="Subsection Title"/>
 
                             </div>
 
-                            <div class="form-field">
+                            <!-- <div class="form-field">
 
                                 <input type="text" name="sub_section_start_url[]" placeholder="Starting URL"/>
 
-                            </div>
+                            </div> -->
 
-                            <div class="form-field">
+                            
 
-                                <input type="text" name="sub_section_completed_url[]" placeholder="Completed URL"/>
-
-                            </div>
-
-       <!-- <div class="form-field">
-    <select name="sub_section_completed_url[]" >
-        
-
-        <?php
+    <div class="form-field">
+        <label for="">Start URL</label>
+        <select name="sub_section_start_url[]"  required data-control="select2" style="width:100%;" class="form-select" >        
        
-        $pages = get_pages(array('sort_column' => 'post_title', 'sort_order' => 'ASC'));
-        foreach ($pages as $page) {
+        <?php       
+           $pages = get_pages(array('sort_column' => 'post_title', 'sort_order' => 'ASC'));
+            foreach ($pages as $page) {
             $page_url = get_permalink($page->ID);
-            
-
             ?>
 
-            <option value="<?php echo esc_attr($page_url); ?>"><?php echo esc_html($page_url); ?></option>
+            <option value="<?php echo esc_attr($page_url); ?>"><?php echo esc_html($page->post_title); ?></option>
+           
             <?php
-        }
-        ?>
+            }
+           ?>
+        </select>
+   </div>
 
-        <option value="None">None</option>
-    </select>
-</div> -->
+    <div class="form-field">
+        <label for="" >Completed URL</label>
+        <select name="sub_section_completed_url[]" required data-control="select2" style="width:100%;" class="form-select" >        
+       
+        <?php       
+           $pages = get_pages(array('sort_column' => 'post_title', 'sort_order' => 'ASC'));
+            foreach ($pages as $page) {
+            $page_url = get_permalink($page->ID);
+            ?>
+            <option value="<?php echo esc_attr($page_url); ?>"><?php echo esc_html($page->post_title); ?></option>
+            <?php
+            }
+           ?>
+        </select>
+   </div>
 
                             <div class="form-field">
 
@@ -93,7 +101,7 @@ if(isset($_GET['action'])){
 
                     <div class="section-action-btn">
 
-                        <input type="submit" name="save_section" value="save"/>
+                        <input type="submit" name="save_section" value="save" class="save-section-button"/>
 
                         <input type="submit" name="cancel_section" value="Cancel"/>
 
@@ -267,21 +275,72 @@ if(isset($_GET['action'])){
 
                                     <div class="form-field">
 
-                                        <input type="text" name="sub_section_title[]" placeholder="Subsection Title" value="<?php echo $item['sub_title'];?>" id="sub_section_title_<?php echo $key; ?>"  <?php echo $read_only;?> />
+                                        <input type="text" name="sub_section_title[]" placeholder="Subsection Title" required value="<?php echo $item['sub_title'];?>" id="sub_section_title_<?php echo $key; ?>"  <?php echo $read_only;?> />
 
                                     </div>
 
-                                    <div class="form-field">
+                                    <!-- <div class="form-field">
 
                                         <input type="text" name="sub_section_start_url[]" placeholder="Starting URL" value="<?php echo $item['sub_start_url'];?>" id="sub_section_start_url_<?php echo $key; ?>"  <?php echo $read_only;?> />
 
-                                    </div>
-
+                                    </div> -->
+                                    
                                     <div class="form-field">
+    <?php
+        // find page title
+        $selected_url = esc_url($item['sub_start_url']);
+        $selected_title = get_the_title(url_to_postid($selected_url));
+    ?>
+    <label for="">Start URL</label>
+    <select name="sub_section_start_url[]" data-control="select2" style="width:100%;" class="form-select">
+        <option value="<?php echo $selected_url; ?>" selected><?php echo $selected_title; ?></option>
+
+        <?php
+        $pages = get_pages(array('sort_column' => 'post_title', 'sort_order' => 'ASC'));
+        foreach ($pages as $page) {
+            $page_url = get_permalink($page->ID);
+            // Exclude the selected option from the list
+            if ($page_url !== $selected_url) {
+                ?>
+                <option value="<?php echo esc_attr($page_url); ?>"><?php echo esc_html($page->post_title); ?></option>
+                <?php
+            }
+        }
+        ?>
+    </select>
+</div>
+
+                                    <!-- <div class="form-field">
 
                                         <input type="text" name="sub_section_completed_url[]" placeholder="Completed URL" value="<?php echo $item['sub_completed_url'];?>" id="sub_section_completed_url_<?php echo $key; ?>" <?php echo $read_only;?>/>
 
-                                    </div>
+                                    </div> -->
+                                    <div class="form-field">
+        <label for="">Completed URL</label>
+        <?php
+        // find page title
+          $selected_url = esc_url($item['sub_completed_url']);
+$selected_title = get_the_title(url_to_postid($selected_url));
+
+        ?>
+        <select name="sub_section_completed_url[]" data-control="select2" style="width:100%;" class="form-select" >        
+        
+        <option value="<?php  echo $item['sub_completed_url'];?>" selected><?php  echo $selected_title;?></option>
+        <?php       
+           $pages = get_pages(array('sort_column' => 'post_title', 'sort_order' => 'ASC'));
+
+            foreach ($pages as $page) {
+            $page_url = get_permalink($page->ID);
+            if ($page_url !== $selected_url) {
+            ?>
+            <option value="<?php echo esc_attr($page_url); ?>"><?php echo esc_html($page->post_title); ?></option>
+            <?php
+            }
+            }
+           ?>
+        </select>
+   </div>
+
 
                                     <div class="form-field action-field">
 
@@ -309,7 +368,7 @@ if(isset($_GET['action'])){
 
                     <div class="section-action-btn">
 
-                        <input type="submit" name="save_section" value="Save"/>
+                        <input type="submit" name="save_section" class="save-section-button" value="Save"/>
 
                         <input type="submit" name="cancel_section" value="Cancel"/>
 
@@ -563,9 +622,8 @@ if(isset($_GET['action'])){
 
 
 <script>
-
 jQuery(document).ready(function($){
-
+    // $('.form-select').select2();
     jQuery.validator.addMethod("lettersonly", function(value, element) {
         return this.optional(element) || /^[a-zA-Z\s]+$/i.test(value);
     }, "Please enter only characters");
@@ -576,6 +634,31 @@ jQuery(document).ready(function($){
 
 
 // Add Sections start
+
+    // Custom validation methods
+    $.validator.addMethod("uniqueCompletedUrl", function(value, element) {
+        var completedUrls = [];
+        // Gather all Completed URLs except the current element's:
+        $('select[name^="sub_section_completed_url"]').not(element).each(function() {
+            completedUrls.push($(this).val());
+        });
+        // Ensure uniqueness even across sections:
+        return completedUrls.indexOf(value) === -1;
+    }, "Please select a unique Completed URL for each subsection.");
+
+    $.validator.addMethod("differentFromStartUrl", function(value, element) {
+        var startUrlSelect = $(element).closest(".form-field").prev().find("select");
+        return value !== startUrlSelect.val();
+    }, "Completed URL must be different from Start URL.");
+
+    $(document).on('focus', 'select[name^="sub_section_completed_url"]', function() {
+        $(this).rules('add', {
+            // uniqueCompletedUrl: true,
+            differentFromStartUrl: true
+        });
+    });
+
+
 
   jQuery( "#add_form" ).validate({
 
@@ -607,75 +690,109 @@ jQuery(document).ready(function($){
 
         required: true,
 
-        url: true
 
     },
 
     'sub_section_completed_url[]': {
 
         required: true,
+       uniqueCompletedUrl: true,
+       differentFromStartUrl: true
 
-        url: true
 
     }
 
+    
+
+
 },
 
-submitHandler: function(form) {
 
-    var formData = jQuery('#add_form').serialize(); // You need to use standard javascript object here
 
-    jQuery.ajax({
+submitHandler: function (form) {
+    // Custom validation for unique Start URL and Completed URL
+    var startUrls = [];
+    var completedUrls = [];
+    var isValid = true;
 
-        url: '<?php echo site_url(); ?>/wp-admin/admin-ajax.php',
+    $('.sections-fields').each(function () {
+        var startUrlSelect = $(this).find('select[name^="sub_section_start_url"]');
+        var completedUrlSelect = $(this).find('select[name^="sub_section_completed_url"]');
 
-        type: "POST",
+        var startUrl = startUrlSelect.val();
+        var completedUrl = completedUrlSelect.val();
 
-        data: {
-
-            action: 'learning_modules_save_action_backend',
-
-            data: formData
-
-        },
-
-        success: function(data) {
-
-            if(data == 'success'){
-
-                Swal.fire({
-
-                    title: 'Added',
-
-                    text: "Section has been Added",
-
-                    icon: 'success',
-
-                    confirmButtonText: 'Ok',
-
-                }).then((result) =>{
-
-                    if (result.isConfirmed) {
-
-                        window.location.href = '<?php echo site_url(); ?>/wp-admin/admin.php?page=learning_sections';
-
-                    }
-
-                });
-
-            }
-
+        // Check if Start URL and Completed URL are the same within the subsection
+        if (startUrl === completedUrl) {
+            isValid = false;
+            // Display an error message or handle it as needed
+            return false; // Exit the each loop
         }
 
+        startUrls.push(startUrl);
+        completedUrls.push(completedUrl);
     });
 
-    return false;
+    if (isValid) {
+        // Check for empty input fields in dynamically generated subsections
+    var allSubsectionsValid = true;
+    $('.subsection-learning-section .sections-fields').each(function () {
+        if ($(this).find('input[type="text"]').filter(function () {
+            return $.trim($(this).val()) === '';
+        }).length > 0) {
+            allSubsectionsValid = false;
+            return false; // Exit the loop if any subsection has empty fields
+        }
+    });
 
+    if (allSubsectionsValid) {
+        // Proceed with form submission
+        var formData = jQuery('#add_form').serialize();
+
+        jQuery.ajax({
+            url: '<?php echo site_url(); ?>/wp-admin/admin-ajax.php',
+            type: "POST",
+            data: {
+                action: 'learning_modules_save_action_backend',
+                data: formData
+            },
+            success: function (data) {
+                if (data == 'success') {
+                    Swal.fire({
+                        title: 'Added',
+                        text: "Section has been Added",
+                        icon: 'success',
+                        confirmButtonText: 'Ok',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '<?php echo site_url(); ?>/wp-admin/admin.php?page=learning_sections';
+                        }
+                    });
+                }
+            }
+        });
+    } else {
+        // Display a SweetAlert error message for invalid subsections
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Please fill in all subsection fields before submitting.',
+        });
+    }
+    } else {
+        // Display a SweetAlert error message for duplicate URLs
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Please select unique Start and Completed URLs for each subsection.',
+        });
+    }
+    return false;
 }
 
 
-
 });
+    
 
 // Add Sections end
 // edit Sections start
@@ -710,7 +827,7 @@ submitHandler: function(form) {
 
     required: true,
 
-    url: true
+
 
 },
 
@@ -718,7 +835,8 @@ submitHandler: function(form) {
 
     required: true,
 
-    url: true
+    uniqueCompletedUrl: true,
+                differentFromStartUrl: true
 
 }
 
@@ -726,7 +844,43 @@ submitHandler: function(form) {
 
 submitHandler: function(form) {
 
-var formData = jQuery('#edit_form').serialize(); // You need to use standard javascript object here
+      // Custom validation for unique Start URL and Completed URL
+      var startUrls = [];
+    var completedUrls = [];
+    var isValid = true;
+
+    $('.sections-fields').each(function () {
+        var startUrlSelect = $(this).find('select[name^="sub_section_start_url"]');
+        var completedUrlSelect = $(this).find('select[name^="sub_section_completed_url"]');
+
+        var startUrl = startUrlSelect.val();
+        var completedUrl = completedUrlSelect.val();
+
+        // Check if Start URL and Completed URL are the same within the subsection
+        if (startUrl === completedUrl) {
+            isValid = false;
+            // Display an error message or handle it as needed
+            return false; // Exit the each loop
+        }
+
+        startUrls.push(startUrl);
+        completedUrls.push(completedUrl);
+    });
+
+    if (isValid) {
+        // Check for empty input fields in dynamically generated subsections
+    var allSubsectionsValid = true;
+    $('.subsection-learning-section .sections-fields').each(function () {
+        if ($(this).find('input[type="text"]').filter(function () {
+            return $.trim($(this).val()) === '';
+        }).length > 0) {
+            allSubsectionsValid = false;
+            return false; // Exit the loop if any subsection has empty fields
+        }
+    });
+
+    if (allSubsectionsValid) {
+        var formData = jQuery('#edit_form').serialize(); // You need to use standard javascript object here
 
 jQuery.ajax({
 
@@ -771,8 +925,25 @@ jQuery.ajax({
     }
 
 });
+    } else {
 
-return false;
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Please fill in all subsection fields before submitting.',
+        });
+    }
+    } else {
+        // Display a SweetAlert error message for duplicate URLs
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Please select unique Start and Completed URLs for each subsection.',
+        });
+    }
+    return false;
+
+
 
 }
 
@@ -797,11 +968,38 @@ return false;
 
         numItems = numItems+1;
 
-        var fields = '<div class="sections-fields"><div class="form-field"><input type="text" name="sub_section_title[]" placeholder="Subsection Title" id="sub_section_title_'+numItems+'"/></div><div class="form-field"><input type="text" name="sub_section_start_url[]" placeholder="Starting URL" id="sub_section_start_url_'+numItems+'"/></div> <div class="form-field"><input type="text" name="sub_section_completed_url[]" placeholder="Completed URL" id="sub_section_completed_url_'+numItems+'"/></div><div class="form-field"><a href="javascript:void(0)" onclick="deletethis(jQuery(this))">X</a> </div></div>';
+       // var fields = '<div class="sections-fields"><div class="form-field"><input type="text" name="sub_section_title[]" placeholder="Subsection Title" id="sub_section_title_'+numItems+'"/></div><div class="form-field"><input type="text" name="sub_section_start_url[]" placeholder="Starting URL" id="sub_section_start_url_'+numItems+'"/></div> <div class="form-field"><input type="text" name="sub_section_completed_url[]" placeholder="Completed URL" id="sub_section_completed_url_'+numItems+'"/></div><div class="form-field"><a href="javascript:void(0)" onclick="deletethis(jQuery(this))">X</a> </div></div>';
+       var fields = '<div class="sections-fields">' +
+                    '<div class="form-field"><input type="text" required name="sub_section_title[]" placeholder="Subsection Title" id="sub_section_title_' + numItems + '"/></div>' +
+                    '<div class="form-field">'+
+                    '<label for="">Start URL</label>' +
+                        '<select name="sub_section_start_url[]" required data-control="select2" style="width:100%;" class="form-select">' +
+                            jQuery('.subsection-learning-section .sections-fields:first-child select[name="sub_section_start_url[]"]').html() +
+                        '</select>' +
+                    '</div>' +
+                    '<div class="form-field">' +
+                        '<label for="">Completed URL</label>' +
+                        '<select name="sub_section_completed_url[]" required data-control="select2" style="width:100%;" class="form-select">' +
+                            jQuery('.subsection-learning-section .sections-fields:first-child select[name="sub_section_completed_url[]"]').html() +
+                        '</select>' +
+                    '</div>' +
+                    '<div class="form-field"><a href="javascript:void(0)" onclick="deletethis(jQuery(this))">X</a></div>' +
+                 '</div>';
+    
 
         jQuery('.subsection-learning-section').append(fields);
+         // Trigger validation for all newly added fields in the subsection
+//   $('select[name^="sub_section_completed_url[]"]').each(function() {
+//     $(this).rules('add', {
+//       // Add your validation rules here, e.g., required: true, 
+//       uniqueCompletedUrl: true,
+//        differentFromStartUrl: true
+//     });
+//     $(this).valid(); // Trigger immediate validation
+//   });
 
         jQuery('.subsection-learning-section .sections-fields a').show();
+        
 
     });
 
@@ -1052,8 +1250,8 @@ Swal.fire({
 
 
     if (result.isConfirmed) {
-        var overlay = jQuery('<div id="overlayemail"> Sending email.. Please Wait.. </div>');
-        jQuery('body').append(overlay);
+      //  var overlay = jQuery('<div id="overlayemail"> Sending email.. Please Wait.. </div>');
+        // jQuery('body').append(overlay);
         jQuery.ajax({
 
             url: '<?php echo site_url(); ?>/wp-admin/admin-ajax.php',
@@ -1072,29 +1270,29 @@ Swal.fire({
 
             success: function(data) {
                 //jQuery('.learning-main-section').append(data);
-                if(data == 'success'){
-                    jQuery('#overlayemail').remove();
-                    Swal.fire({
+                // if(data == 'success'){
+                //     jQuery('#overlayemail').remove();
+                //     Swal.fire({
 
-                        title: 'Email Sent',
+                //         title: 'Email Sent',
 
-                        text: "",
+                //         text: "",
 
-                        icon: 'success',
+                //         icon: 'success',
 
-                        confirmButtonText: 'Ok',
+                //         confirmButtonText: 'Ok',
 
-                    });/* .then((result) =>{
+                //     });/* .then((result) =>{
 
-                        if (result.isConfirmed) {
+                //         if (result.isConfirmed) {
 
-                            window.location.href = '<?php echo site_url(); ?>/wp-admin/admin.php?page=learning_sections&action=assign_users&section_id='+section_id;
+                //             window.location.href = '<?php echo site_url(); ?>/wp-admin/admin.php?page=learning_sections&action=assign_users&section_id='+section_id;
 
-                        }
+                //         }
 
-                    }); */
+                //     }); */
 
-                }
+                // }
 
             }
 
